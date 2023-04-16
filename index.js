@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require('uuid');
 const User = require("./models/register");
+
+
 const bodyParser = require('body-parser')
 var cors = require("cors");
 
@@ -15,7 +17,7 @@ mongoose.connection.on('connected', con => {
 })
 ////////////////////////////////
 const app = express();
-const port = 5030; //port for local host 
+const port = 3000; //port for local host 
 /// connection parameters 
 const connectionParams = {
   useNewUrlParser: true,
@@ -76,6 +78,24 @@ app.post("/login", async (req, res) => { //POST request to handle login
       res.status(500).send(error);  
     }
   });
+
+
+//admin page api fetching the data 
+
+const EquipmentModel = require('./models/equipment');
+
+// GET all equipment
+app.get('/equipment', async (req, res) => {
+  try {
+    const equipment = await EquipmentModel.find();
+    res.json(equipment);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`); // prints whwre the local host running or on which port it is serving us  
